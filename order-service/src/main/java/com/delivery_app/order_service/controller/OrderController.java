@@ -1,5 +1,7 @@
 package com.delivery_app.order_service.controller;
 
+import com.delivery_app.order_service.DTO.OrderRequestDTO;
+import com.delivery_app.order_service.DTO.OrderResponseDTO;
 import com.delivery_app.order_service.entity.Order;
 import com.delivery_app.order_service.service.OrderService;
 import com.delivery_app.order_service.service.OrderServiceImpl;
@@ -16,21 +18,27 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/new")
-    public Order createOrder(@RequestBody Order order) {
+    public OrderResponseDTO createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         // Logic to create a new order
-        return orderService.createOrder(order);
+        return orderService.createOrder(orderRequestDTO);
     }
 
     @GetMapping
-    public List<Order> getAllOrders() {
+    public List<OrderResponseDTO> getAllOrders() {
         // Logic to retrieve all orders
         return orderService.getAllOrders();
     }
 
     @PutMapping("/{id}")
-    public Order updateOrder(@PathVariable Long id, @RequestBody Order order) {
+    public OrderResponseDTO updateOrder(@PathVariable Long id, @RequestBody OrderRequestDTO dto) {
         // Logic to update an existing order
-        return orderService.updateOrder(id, order);
+        return orderService.updateOrder(id, dto);
+    }
+
+    @GetMapping("/{id}")
+    public OrderResponseDTO getOrderById(@PathVariable Long id) {
+        // Logic to get an order by ID
+        return orderService.getOrderById(id);
     }
 
     @DeleteMapping("/{id}")
