@@ -20,7 +20,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String customerName;
+    private Long customerId;
     private String status;
     private LocalDateTime createdAt = LocalDateTime.now();
 

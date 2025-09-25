@@ -13,7 +13,7 @@ import java.util.List;
 public class OrderResponseDTO {
 
     private Long id;
-    private String customerName;
+    private Long customerId;
     private String status;
     private LocalDateTime createdAt;
     private List<OrderItemsDTO> items;

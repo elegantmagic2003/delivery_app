@@ -23,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderResponseDTO mapToDTO(Order order) {
         return new OrderResponseDTO(
                 order.getId(),
-                order.getCustomerName(),
+                order.getCustomerId(),
                 order.getStatus(),
                 order.getCreatedAt(),
                 order.getItems().stream()
@@ -38,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
 
     private Order mapToEntity(OrderRequestDTO dto) {
         Order order = new Order();
-        order.setCustomerName(dto.getCustomerName());
+        order.setCustomerId(dto.getCustomerId());
         order.setStatus(dto.getStatus());
 
         if (dto.getItems() != null) {
@@ -75,7 +75,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
 
-        order.setCustomerName(dto.getCustomerName());
+        order.setCustomerId(dto.getCustomerId());
         order.setStatus(dto.getStatus());
 
         if (dto.getItems() != null) {

@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderRequestDTO {
 
-    private String customerName;
+    private Long customerId;
     private String status;
     private List<OrderItemsDTO> items;
 }
