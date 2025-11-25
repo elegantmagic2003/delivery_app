@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
@@ -46,5 +46,11 @@ public class OrderController {
         // Logic to delete an order
         orderService.deleteOrder(id);
     }
+
+    @GetMapping("/customer/{customerId}")
+    public List<OrderResponseDTO> getOrdersByCustomer(@PathVariable Long customerId) {
+        return orderService.getOrdersByCustomer(customerId);
+    }
+
 
 }

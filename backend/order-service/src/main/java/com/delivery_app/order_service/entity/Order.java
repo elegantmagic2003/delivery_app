@@ -22,10 +22,14 @@ public class Order {
 
     private Long customerId;
     private String status;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("order") // tránh vòng lặp
+    @JsonIgnoreProperties("order")
     private List<OrderItems> items = new ArrayList<>();
-    // getters & setters
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

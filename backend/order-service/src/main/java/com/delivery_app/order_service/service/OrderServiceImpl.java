@@ -26,13 +26,14 @@ public class OrderServiceImpl implements OrderService {
                 order.getCustomerId(),
                 order.getStatus(),
                 order.getCreatedAt(),
-                order.getItems().stream()
-                        .map(item -> new OrderItemsDTO(
-                                item.getId(),
-                                item.getProductId(),
-                                item.getQuantity()
-                        ))
-                        .collect(toList())
+                order.getItems() == null ? List.of() :
+                        order.getItems().stream()
+                                .map(item -> new OrderItemsDTO(
+                                        item.getId(),
+                                        item.getProductId(),
+                                        item.getQuantity()
+                                ))
+                                .toList()
         );
     }
 
@@ -107,5 +108,12 @@ public class OrderServiceImpl implements OrderService {
         return mapToDTO(order);
     }
 
+    @Override
+    public List<OrderResponseDTO> getOrdersByCustomer(Long customerId) {
+        return orderRepository.findByCustomerId(customerId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
 
 }
