@@ -19,26 +19,34 @@ import java.util.List;
 public class SecurityConfig {
 
     @Bean
+    public JwtUtil jwtUtil() {
+        return new JwtUtil();
+    }
+
+    @Bean
     public JwtAuthFilter jwtAuthFilter(JwtUtil jwtUtil) {
         return new JwtAuthFilter(jwtUtil);
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http.csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/staff/**").hasRole("STAFF")
-                        .requestMatchers("/customers/**").hasAnyRole("ADMIN","STAFF")
-                        .anyRequest().permitAll() // cho qua hết các endpoint khác
+                        .requestMatchers("/auth/**").permitAll()      // mở đăng ký/đăng nhập
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // chỉ ADMIN
+                        .requestMatchers("/staff/**").hasRole("STAFF") // chỉ STAFF
+                        .requestMatchers("/me/**").authenticated()     // mọi role đã đăng nhập
+                        .anyRequest().denyAll()
                 )
-                .formLogin(form -> form.disable())
-                .httpBasic(https -> https.disable());
+                .httpBasic(Customizer.withDefaults());
+
+        // Đặt filter JWT trước UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
