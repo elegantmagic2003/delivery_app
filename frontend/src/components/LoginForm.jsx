@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { login } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // thêm Link
 import "./LoginForm.css";
 
 function LoginForm({ onLogin }) {
@@ -44,6 +44,11 @@ function LoginForm({ onLogin }) {
                 <button type="submit">Login</button>
             </form>
             {error && <p className="error-text">{error}</p>}
+
+            {/* Nút/link đăng ký */}
+            <p>
+                Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
+            </p>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import Dashboard from "./components/Dashboard";
 import ProductPage from "./pages/ProductPage";
 import OrderPage from "./pages/OrderPage";
 import CustomerPage from "./pages/CustomerPage.jsx";
+import RegisterForm from "./components/RegisterForm.jsx";
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -32,6 +33,7 @@ function App() {
                 {!isAuthenticated ? (
                     <>
                         <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
+                        <Route path="/register" element={<RegisterForm />} />
                         <Route path="*" element={<Navigate to="/login" />} />
                     </>
                 ) : (
