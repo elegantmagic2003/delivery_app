@@ -2,17 +2,22 @@ import React, { useState } from "react";
 import { getCustomerById } from "../api/customerApi";
 import { getOrdersByCustomer } from "../api/orderApi";
 
-function CustomerDetail({ token }) {
+function CustomerDetail() {
     const [customerId, setCustomerId] = useState("");
     const [customer, setCustomer] = useState(null);
     const [orders, setOrders] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const cust = await getCustomerById(token, customerId);
-        setCustomer(cust);
-        const ords = await getOrdersByCustomer(token, customerId);
-        setOrders(ords);
+        try {
+            const cust = await getCustomerById(customerId); // không cần token nữa
+            setCustomer(cust);
+
+            const ords = await getOrdersByCustomer(customerId);
+            setOrders(ords);
+        } catch (err) {
+            console.error("Lỗi khi lấy dữ liệu khách hàng:", err);
+        }
     };
 
     return (
@@ -40,7 +45,7 @@ function CustomerDetail({ token }) {
                             <li key={o.id}>
                                 Order #{o.id} | Status: {o.status} | Created: {o.createdAt}
                                 <ul>
-                                    {o.items.map(item => (
+                                    {o.items.map((item) => (
                                         <li key={item.id}>
                                             Product: {item.productId} | Quantity: {item.quantity}
                                         </li>

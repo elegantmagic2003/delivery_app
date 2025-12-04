@@ -26,7 +26,6 @@
         public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
             String path = exchange.getRequest().getPath().toString();
 
-            // ✅ Bỏ qua endpoint /auth/**
             if (path.startsWith("/auth")) {
                 return chain.filter(exchange);
             }
@@ -46,20 +45,16 @@
                         .parseClaimsJws(token)
                         .getBody();
 
-                // ✅ Có thể lấy username nếu cần
-                // String username = claims.getSubject();
-
             } catch (Exception e) {
                 exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 return exchange.getResponse().setComplete();
             }
 
-            // ✅ Token hợp lệ → cho phép tiếp tục
             return chain.filter(exchange);
         }
 
         @Override
         public int getOrder() {
-            return -1; // chạy sớm nhất
+            return -1;
         }
     }

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { updateOrder } from "../api/orderApi";
 
-function OrderUpdateForm({ token }) {
+function OrderUpdateForm() {
     const [orderId, setOrderId] = useState("");
     const [customerId, setCustomerId] = useState("");
     const [status, setStatus] = useState("NEW");
@@ -28,12 +28,17 @@ function OrderUpdateForm({ token }) {
                 quantity: parseInt(it.quantity)
             }))
         };
-        await updateOrder(token, orderId, dto);
-        alert("Cập nhật đơn hàng thành công!");
-        setOrderId("");
-        setCustomerId("");
-        setStatus("NEW");
-        setItems([{ productId: "", quantity: "" }]);
+        try {
+            await updateOrder(orderId, dto); // không cần token nữa
+            alert("Cập nhật đơn hàng thành công!");
+            setOrderId("");
+            setCustomerId("");
+            setStatus("NEW");
+            setItems([{ productId: "", quantity: "" }]);
+        } catch (err) {
+            console.error("Lỗi khi cập nhật đơn hàng:", err);
+            alert("Cập nhật đơn hàng thất bại!");
+        }
     };
 
     return (

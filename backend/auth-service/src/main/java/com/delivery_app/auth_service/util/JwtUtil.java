@@ -18,33 +18,39 @@ public class JwtUtil {
 
     private final Key key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
-    // Sinh token
-    public String generateToken(String username) {
+    // Thêm userId vào claim
+    public String generateToken(Long userId, String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("userId", userId)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1h
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    // Lấy username từ token
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-    // Kiểm tra token còn hợp lệ không
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
+    }
+
+    public Long extractUserId(String token) {
+        return extractAllClaims(token).get("userId", Long.class);
+    }
+
     public boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
     }
 
-    // Kiểm tra token hết hạn chưa
     private boolean isTokenExpired(String token) {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-    // Parse claims từ token
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

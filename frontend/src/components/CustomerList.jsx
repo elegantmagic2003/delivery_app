@@ -1,16 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { getCustomers, deleteCustomer } from "../api/customerApi";
 
-function CustomerList({ token }) {
+function CustomerList() {
     const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        getCustomers(token).then(setCustomers);
-    }, [token]);
+        async function fetchData() {
+            try {
+                const data = await getCustomers(); // không cần token nữa
+                setCustomers(data);
+            } catch (err) {
+                console.error("Lỗi khi lấy danh sách khách hàng:", err);
+            }
+        }
+        fetchData();
+    }, []);
 
     const handleDelete = async (id) => {
-        await deleteCustomer(token, id);
-        setCustomers(customers.filter(c => c.id !== id));
+        try {
+            await deleteCustomer(id); // không cần token nữa
+            setCustomers(customers.filter((c) => c.id !== id));
+        } catch (err) {
+            console.error("Lỗi khi xóa khách hàng:", err);
+        }
     };
 
     return (
@@ -19,7 +31,7 @@ function CustomerList({ token }) {
             <ul>
                 {customers.map((c) => (
                     <li key={c.id}>
-                        {c.name} | {c.email} | {c.phone} | {c.address}
+                        {c.id} | {c.name} | {c.email} | {c.phone} | {c.address}
                         <button onClick={() => handleDelete(c.id)}>Xóa</button>
                     </li>
                 ))}

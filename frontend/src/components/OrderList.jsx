@@ -1,30 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { getOrders, deleteOrder } from "../api/orderApi";
+import "./OrderList.css";
 
-function OrderList({ token }) {
+function OrderList({ onViewDetail }) {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getOrders(token)
-            .then((data) => {
+        async function fetchOrders() {
+            try {
+                const data = await getOrders();
                 if (Array.isArray(data)) {
                     setOrders(data);
                 } else {
-                    setOrders([]); // fallback nếu API trả về object lỗi
+                    setOrders([]);
                 }
-            })
-            .catch(() => setOrders([]))
-            .finally(() => setLoading(false));
-    }, [token]);
+            } catch (err) {
+                console.error("Lỗi khi lấy danh sách đơn hàng:", err);
+                setOrders([]);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchOrders();
+    }, []);
 
     const handleDelete = async (id) => {
-        await deleteOrder(token, id);
-        setOrders((prev) => prev.filter((o) => o.id !== id));
+        try {
+            await deleteOrder(id);
+            setOrders((prev) => prev.filter((o) => o.id !== id));
+        } catch (err) {
+            console.error("Lỗi khi xóa đơn hàng:", err);
+        }
     };
 
     return (
-        <div>
+        <div className="order-list">
             <h3>Danh sách đơn hàng</h3>
             {loading ? (
                 <p>Đang tải...</p>
@@ -34,17 +45,11 @@ function OrderList({ token }) {
                 <ul>
                     {orders.map((o) => (
                         <li key={o.id}>
-                            <strong>Order #{o.id}</strong> | Customer: {o.customerId} | Status:{" "}
-                            {o.status} | Created: {o.createdAt}
-                            <ul>
-                                {Array.isArray(o.items) &&
-                                    o.items.map((item) => (
-                                        <li key={item.id}>
-                                            Product: {item.productId} | Quantity: {item.quantity}
-                                        </li>
-                                    ))}
-                            </ul>
-                            <button onClick={() => handleDelete(o.id)}>Xóa</button>
+                            <strong>Order #{o.id}</strong> | Customer: {o.customerId}
+                            <div className="order-actions">
+                                <button onClick={() => onViewDetail(o)}>Xem chi tiết</button>
+                                <button onClick={() => handleDelete(o.id)}>Xóa</button>
+                            </div>
                         </li>
                     ))}
                 </ul>

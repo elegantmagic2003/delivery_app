@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createProduct } from "../api/productApi";
 
-function ProductForm({ token }) {
+function ProductForm() {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [description, setDescription] = useState("");
@@ -13,11 +13,16 @@ function ProductForm({ token }) {
             price: parseFloat(price),
             description
         };
-        await createProduct(token, dto);
-        alert("Thêm sản phẩm thành công!");
-        setName("");
-        setPrice("");
-        setDescription("");
+        try {
+            await createProduct(dto); // không cần token nữa
+            alert("Thêm sản phẩm thành công!");
+            setName("");
+            setPrice("");
+            setDescription("");
+        } catch (err) {
+            console.error("Lỗi khi thêm sản phẩm:", err);
+            alert("Thêm sản phẩm thất bại!");
+        }
     };
 
     return (

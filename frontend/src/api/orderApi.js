@@ -1,51 +1,30 @@
-export async function getOrders(token) {
-    const res = await fetch("http://localhost:8080/orders", {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
+import api from "./axiosInstance";
+
+export async function getOrders() {
+    const res = await api.get("/orders");
+    return res.data;
 }
 
-export async function createOrder(token, orderRequest) {
-    const res = await fetch("http://localhost:8080/orders/new", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderRequest),
-    });
-    return res.json();
+export async function getOrderById(id) {
+    const res = await api.get(`/orders/${id}`);
+    return res.data;
 }
 
-export async function updateOrder(token, id, orderRequest) {
-    const res = await fetch(`http://localhost:8080/orders/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(orderRequest),
-    });
-    return res.json();
+export async function createOrder(orderRequest) {
+    const res = await api.post("/orders/new", orderRequest);
+    return res.data;
 }
 
-export async function deleteOrder(token, id) {
-    await fetch(`http://localhost:8080/orders/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-    });
+export async function updateOrder(id, orderRequest) {
+    const res = await api.put(`/orders/${id}`, orderRequest);
+    return res.data;
 }
 
-export async function getOrderById(token, id) {
-    const res = await fetch(`http://localhost:8080/orders/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
+export async function deleteOrder(id) {
+    await api.delete(`/orders/${id}`);
 }
 
-export async function getOrdersByCustomer(token, customerId) {
-    const res = await fetch(`http://localhost:8080/orders/customer/${customerId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
+export async function getOrdersByCustomer(customerId) {
+    const res = await api.get(`/orders/customer/${customerId}`);
+    return res.data;
 }

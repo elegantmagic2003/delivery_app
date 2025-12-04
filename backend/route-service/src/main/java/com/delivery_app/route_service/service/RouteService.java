@@ -1,14 +1,14 @@
 package com.delivery_app.route_service.service;
 
+import com.delivery_app.route_service.entity.Route;
+import com.delivery_app.route_service.repository.RouteRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.json.JSONObject;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class RouteService {
@@ -18,7 +18,13 @@ public class RouteService {
 
     private final String ORS_URL = "https://api.openrouteservice.org/v2/directions/driving-car";
 
-    public JSONObject getRoute(double startLat, double startLng, double endLat, double endLng) {
+    private final RouteRepository routeRepository;
+
+    public RouteService(RouteRepository routeRepository) {
+        this.routeRepository = routeRepository;
+    }
+
+    public JSONObject callOpenRoute(double startLat, double startLng, double endLat, double endLng) {
         try {
             RestTemplate restTemplate = new RestTemplate();
 
@@ -43,5 +49,22 @@ public class RouteService {
             error.put("error", "Unable to fetch route");
             return error;
         }
+    }
+
+    public Route saveRoute(Long orderId, double distance, double duration, String geometry) {
+        Route route = new Route();
+        route.setOrderId(orderId);
+        route.setDistance(distance);
+        route.setDuration(duration);
+        route.setGeometry(geometry);
+        return routeRepository.save(route);
+    }
+
+    public Route getRouteByOrderId(Long orderId) {
+        return routeRepository.findByOrderId(orderId).orElse(null);
+    }
+
+    public JSONObject getRoute(double startLat, double startLng, double endLat, double endLng) {
+        return callOpenRoute(startLat, startLng, endLat, endLng);
     }
 }

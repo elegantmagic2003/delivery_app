@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { createOrder } from "../api/orderApi";
 
-function OrderForm({ token }) {
+function OrderForm() {
     const [customerId, setCustomerId] = useState("");
     const [status, setStatus] = useState("NEW");
     const [items, setItems] = useState([{ productId: "", quantity: "" }]);
@@ -27,11 +27,16 @@ function OrderForm({ token }) {
                 quantity: parseInt(it.quantity)
             }))
         };
-        await createOrder(token, orderRequest);
-        alert("Tạo đơn hàng thành công!");
-        setCustomerId("");
-        setStatus("NEW");
-        setItems([{ productId: "", quantity: "" }]);
+        try {
+            await createOrder(orderRequest); // không cần token nữa
+            alert("Tạo đơn hàng thành công!");
+            setCustomerId("");
+            setStatus("NEW");
+            setItems([{ productId: "", quantity: "" }]);
+        } catch (err) {
+            console.error("Lỗi khi tạo đơn hàng:", err);
+            alert("Tạo đơn hàng thất bại!");
+        }
     };
 
     return (

@@ -1,8 +1,9 @@
+import axios from "axios";
+
 export async function login(username, password) {
-    const res = await fetch("http://localhost:8084/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
+    const res = await axios.post("http://localhost:8084/auth/login", {
+        username,
+        password,
     });
-    return res.text(); // backend trả token dạng string
+    return res.data; // backend trả token
 }

@@ -1,0 +1,54 @@
+/* OrderDetail.css */
+
+.order-detail {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+.order-detail h4 {
+    margin-bottom: 10px;
+}
+
+.order-detail h5 {
+    margin-top: 20px;
+}
+
+.order-detail ul {
+    padding-left: 20px;
+}
+
+.route-section {
+    margin-top: 20px;
+}
+
+.route-box {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.route-map {
+    width: 100%;
+    height: 400px; /* bản đồ cao hơn và hình chữ nhật */
+    margin-bottom: 10px;
+}
+
+.edit-button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.edit-button:hover {
+    background-color: #0056b3;
+}

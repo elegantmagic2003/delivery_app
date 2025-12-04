@@ -1,4 +1,4 @@
-package com.delivery_app.auth_service.model;
+package com.delivery_app.customer_service.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

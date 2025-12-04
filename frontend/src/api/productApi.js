@@ -1,18 +1,11 @@
-export async function getProducts(token) {
-    const res = await fetch("http://localhost:8080/products", {
-        headers: { Authorization: `Bearer ${token}` },
-    });
-    return res.json();
+import api from "./axiosInstance";
+
+export async function getProducts() {
+    const res = await api.get("/products");
+    return res.data;
 }
 
-export async function createProduct(token, product) {
-    const res = await fetch("http://localhost:8080/products/new", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(product),
-    });
-    return res.json();
+export async function createProduct(product) {
+    const res = await api.post("/products/new", product);
+    return res.data;
 }

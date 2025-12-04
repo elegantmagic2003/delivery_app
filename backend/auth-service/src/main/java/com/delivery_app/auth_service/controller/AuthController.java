@@ -1,12 +1,11 @@
 package com.delivery_app.auth_service.controller;
 
-import com.delivery_app.auth_service.model.User;
+import com.delivery_app.auth_service.dto.LoginRequest;
+import com.delivery_app.auth_service.dto.RegisterRequest;
 import com.delivery_app.auth_service.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -14,13 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    // Đăng ký tài khoản mới
     @PostMapping("/register")
-    public String register(@RequestBody User user) {
-        return authService.register(user);
+    public ResponseEntity<String> register(@RequestBody RegisterRequest req) {
+        String result = authService.register(req);
+        return ResponseEntity.ok(result);
     }
 
+    // Đăng nhập, trả về JWT
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
-        return authService.login(user.getUsername(), user.getPassword());
+    public ResponseEntity<String> login(@RequestBody LoginRequest req) {
+        String token = authService.login(req.getUsername(), req.getPassword());
+        return ResponseEntity.ok(token);
     }
 }
